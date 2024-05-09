@@ -1,3 +1,4 @@
+D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Controller\HomeController.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Entity\ChatRoom.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Service\MessageServiceImpl.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\DTO\AuthResponse.java
@@ -23,6 +24,7 @@ D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Config\JWTCo
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\DTO\UpdateUserRequest.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Controller\ChatController.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\DTO\Emoji.java
+D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\DTO\MessageType.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Repository\FileMetaDataRepo.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Controller\ErrorHandler.java
 D:\Projects\WhatsAppServer\src\main\java\com\example\WhatsAppServer\Entity\FileMetaData.java

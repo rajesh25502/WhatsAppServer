@@ -15,6 +15,8 @@ com\example\WhatsAppServer\DTO\SingleChatReq.class
 com\example\WhatsAppServer\Exception\ApplicationError.class
 com\example\WhatsAppServer\Config\AppConfig.class
 com\example\WhatsAppServer\Controller\AuthController.class
+com\example\WhatsAppServer\Entity\Message$MessageBuilder.class
+com\example\WhatsAppServer\DTO\MessageType.class
 com\example\WhatsAppServer\Config\JWTProvider.class
 com\example\WhatsAppServer\Controller\RealTimeChat.class
 com\example\WhatsAppServer\Service\MessageService.class
@@ -38,4 +40,5 @@ com\example\WhatsAppServer\Exception\UserException.class
 com\example\WhatsAppServer\DTO\UpdateUserRequest.class
 com\example\WhatsAppServer\Config\AppConfig$1.class
 com\example\WhatsAppServer\Service\CustomUserService.class
+com\example\WhatsAppServer\Controller\HomeController.class
 com\example\WhatsAppServer\DTO\LoginRequest.class
