@@ -1,14 +1,18 @@
 package com.example.WhatsAppServer.Service;
 
 import com.example.WhatsAppServer.DTO.GroupChatRequest;
+import com.example.WhatsAppServer.DTO.MessageType;
 import com.example.WhatsAppServer.Entity.ChatRoom;
+import com.example.WhatsAppServer.Entity.Message;
 import com.example.WhatsAppServer.Entity.User;
 import com.example.WhatsAppServer.Exception.ChatRoomException;
 import com.example.WhatsAppServer.Exception.UserException;
 import com.example.WhatsAppServer.Repository.ChatRoomRepo;
+import com.example.WhatsAppServer.Repository.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,6 +22,9 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Autowired
     private ChatRoomRepo chatRoomRepo;
+
+    @Autowired
+    private MessageRepo messageRepo;
 
     @Autowired
     private UserService userService;
@@ -41,6 +48,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         chat.getAdmins().add(registeredUser);
         chat.getUsers().add(user);
         chat.getUsers().add(registeredUser);
+
         return chatRoomRepo.save(chat);
     }
 
@@ -75,6 +83,16 @@ public class ChatRoomServiceImpl implements ChatRoomService{
             User user=userService.findUserByID(userID);
             groupChat.getUsers().add(user);
         }
+
+        Message message=new Message();
+        message.setChat(groupChat);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" has created the group ");
+        message.setMessageType(MessageType.CREATE);
+        message.setTimeStamp(LocalDateTime.now());
+
+        groupChat.getMessages().add(message);
+
         return chatRoomRepo.save(groupChat);
     }
 
@@ -90,25 +108,45 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         }
         group.getAdmins().add(user);
         group.getUsers().add(user);
+
+        Message message=new Message();
+        message.setChat(group);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" has added "+user.getName()+ " as new admin");
+        message.setMessageType(MessageType.NEW_ADMIN);
+        message.setTimeStamp(LocalDateTime.now());
+
+        group.getMessages().add(message);
+
         return chatRoomRepo.save(group);
     }
     @Override
-    public ChatRoom addUserToGroup(Integer userId, Integer chatId,User reqUserId) throws UserException, ChatRoomException {
+    public ChatRoom addUserToGroup(Integer userId, Integer chatId,User reqUser) throws UserException, ChatRoomException {
         ChatRoom group=findChatById(chatId);
         User user=userService.findUserByID(userId);
 
-        if(!group.getAdmins().contains(reqUserId))
+        if(!group.getAdmins().contains(reqUser))
         {
             throw new ChatRoomException("You do not have admin access to add user");
         }
         group.getUsers().add(user);
+
+        Message message=new Message();
+        message.setChat(group);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" has added "+user.getName()+ " to the group");
+        message.setMessageType(MessageType.JOIN);
+        message.setTimeStamp(LocalDateTime.now());
+
+        group.getMessages().add(message);
+
         return chatRoomRepo.save(group);
     }
 
     @Override
-    public ChatRoom renameChatGroup(Integer chatId, String groupName, User reqUserId) throws ChatRoomException, UserException {
+    public ChatRoom renameChatGroup(Integer chatId, String groupName, User reqUser) throws ChatRoomException, UserException {
         ChatRoom group=findChatById(chatId);
-        if(!group.getAdmins().contains(reqUserId))
+        if(!group.getAdmins().contains(reqUser))
         {
             throw new ChatRoomException("You do not have admin access to change group name");
         }
@@ -117,19 +155,29 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
         group.setChatName(groupName);
 
+        Message message=new Message();
+        message.setChat(group);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" changed the group name to "+groupName);
+        message.setMessageType(MessageType.RENAME);
+        message.setTimeStamp(LocalDateTime.now());
+        messageRepo.save(message);
+
+        group.getMessages().add(message);
+
         return chatRoomRepo.save(group);
     }
 
     @Override
-    public ChatRoom removeFromGroup(Integer userId, Integer chatId, User reqUserId) throws ChatRoomException, UserException {
+    public ChatRoom removeFromGroup(Integer userId, Integer chatId, User reqUser) throws ChatRoomException, UserException {
         ChatRoom group=findChatById(chatId);
         User user=userService.findUserByID(userId);
 
-        if(userId.equals(reqUserId.getId()))
+        if(userId.equals(reqUser.getId()))
         {
             exitGroup(chatId,user);
         }
-        if(!group.getAdmins().contains(reqUserId))
+        if(!group.getAdmins().contains(reqUser))
         {
             throw new ChatRoomException("You do not have admin access to remove user");
         }
@@ -137,8 +185,17 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         {
             throw new ChatRoomException("User is not member of the group");
         }
-
         group.getUsers().remove(user);
+
+        Message message=new Message();
+        message.setChat(group);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" has removed "+user.getName()+ " from group");
+        message.setMessageType(MessageType.REMOVE);
+        message.setTimeStamp(LocalDateTime.now());
+
+        group.getMessages().add(message);
+
         return chatRoomRepo.save(group);
     }
     @Override
@@ -155,6 +212,16 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         }
         group.getUsers().remove(reqUser);
         group.getAdmins().remove(reqUser);
+
+        Message message=new Message();
+        message.setChat(group);
+        message.setUser(reqUser);
+        message.setText(reqUser.getName()+" has left the group ");
+        message.setMessageType(MessageType.LEAVE);
+        message.setTimeStamp(LocalDateTime.now());
+
+        group.getMessages().add(message);
+
         return chatRoomRepo.save(group);
     }
     @Override

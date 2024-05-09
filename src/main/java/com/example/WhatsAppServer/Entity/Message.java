@@ -1,9 +1,11 @@
 package com.example.WhatsAppServer.Entity;
 
 import com.example.WhatsAppServer.DTO.Emoji;
+import com.example.WhatsAppServer.DTO.MessageType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private MessageType messageType;
 
     private String text;
 

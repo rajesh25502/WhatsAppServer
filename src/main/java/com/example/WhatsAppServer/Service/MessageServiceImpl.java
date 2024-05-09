@@ -2,6 +2,7 @@ package com.example.WhatsAppServer.Service;
 
 import com.example.WhatsAppServer.DTO.Emoji;
 import com.example.WhatsAppServer.DTO.EmojiResponseReq;
+import com.example.WhatsAppServer.DTO.MessageType;
 import com.example.WhatsAppServer.Entity.ChatRoom;
 import com.example.WhatsAppServer.Entity.FileMetaData;
 import com.example.WhatsAppServer.Entity.Message;
@@ -48,6 +49,7 @@ public class MessageServiceImpl implements MessageService{
         Message message=new Message();
         message.setChat(chat);
         message.setUser(user);
+        message.setMessageType(MessageType.SEND);
         if(text==null && file==null)
             return new Message();
         if(text!=null && !text.isEmpty())
